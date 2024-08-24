@@ -3,6 +3,9 @@ import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FaSliders } from "react-icons/fa6";
 
+
+
+
 const cities = [
   { name: "Mumbai", pincode: "400001", imageUrl: "/mumbai.webp" },
   { name: "Pune", pincode: "411001", imageUrl: "/pune.webp" },
