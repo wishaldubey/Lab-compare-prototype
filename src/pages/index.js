@@ -5,33 +5,19 @@ import { FaSliders } from "react-icons/fa6";
 
 const cities = [
   { name: "Mumbai", pincode: "400001", imageUrl: "/mumbai.webp" },
-  { name: "Delhi", pincode: "110001", imageUrl: "/delhi.png" },
-  { name: "Bangalore", pincode: "560001", imageUrl: "/bengalore.webp" },
-  { name: "Noida", pincode: "201301", imageUrl: "/noida.png" },
-  { name: "Hyderabad", pincode: "500001", imageUrl: "/hyderabad.webp" },
-  { name: "Ahmedabad", pincode: "380001", imageUrl: "/ahmedabad.webp" },
-  { name: "Chennai", pincode: "600001", imageUrl: "/chennai.webp" },
-  { name: "Kolkata", pincode: "700001", imageUrl: "/kolkata.webp" },
-  { name: "Surat", pincode: "395001", imageUrl: "/surat.webp" },
   { name: "Pune", pincode: "411001", imageUrl: "/pune.webp" },
-  { name: "Jaipur", pincode: "302001", imageUrl: "/jaipur.webp" },
-  { name: "Lucknow", pincode: "226001", imageUrl: "/lucknow.webp" },
-  { name: "Kanpur", pincode: "208001", imageUrl: "/kanpur.webp" },
-  { name: "Nagpur", pincode: "440001", imageUrl: "/nagpur.webp" },
-  { name: "Indore", pincode: "452001", imageUrl: "/indore.webp" },
-  { name: "Thane", pincode: "400601", imageUrl: "/thane.webp" },
-  { name: "Bhopal", pincode: "462001", imageUrl: "/bhopal.webp" },
-  { name: "Visakhapatnam", pincode: "530001", imageUrl: "/visakhapatnam.webp" },
-  {
-    name: "Pimpri-Chinchwad",
-    pincode: "411017",
-    imageUrl: "/pimpri-chinchwad.webp",
-  },
-  { name: "Patna", pincode: "800001", imageUrl: "/patna.webp" },
-  { name: "Vadodara", pincode: "390001", imageUrl: "/vadodara.webp" },
+  { name: "Nashik", pincode: "422001", imageUrl: "/nashik.webp" },
+  { name: "Delhi", pincode: "110001", imageUrl: "/delhi.webp" },
+  { name: "Noida", pincode: "201301", imageUrl: "/noida.webp" },
+  { name: "Faridabad", pincode: "121101", imageUrl: "/faridabad.webp" },
   { name: "Ghaziabad", pincode: "201001", imageUrl: "/ghaziabad.webp" },
-  { name: "Ludhiana", pincode: "141001", imageUrl: "/ludhiana.webp" },
-  { name: "Agra", pincode: "282001", imageUrl: "/agra.webp" },
+  { name: "Chandigarh", pincode: "160001", imageUrl: "/chandigarh.webp" },
+  { name: "Gurugram", pincode: "122001", imageUrl: "/gurugram.webp" },
+  { name: "Bangalore", pincode: "560001", imageUrl: "/bengalore.webp" },
+  { name: "Hyderabad", pincode: "500001", imageUrl: "/hyderabad.webp" },
+  { name: "Chennai", pincode: "600001", imageUrl: "/chennai.webp" },
+ { name: "Jaipur", pincode: "302001", imageUrl: "/jaipur.webp" },
+  
 ];
 
 const SearchCities = ({ onSelectCity }) => {
@@ -51,7 +37,7 @@ const SearchCities = ({ onSelectCity }) => {
 
   return (
     <div className="container mx-auto p-5">
-      <h1 className="text-2xl font-bold mb-5">Search Cities</h1>
+      <h1 className="text-2xl font-bold mb-5">Search Labs</h1>
       <input
         type="text"
         placeholder="Search by City Name or Pincode"
