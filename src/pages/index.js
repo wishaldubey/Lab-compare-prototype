@@ -172,7 +172,7 @@ const Home = () => {
                     />
                   )}
                   <h2 className="font-bold">{lab.name}</h2>
-                  <p>Pricing: ${lab.pricing}</p>
+                  <p>Pricing: ₹{lab.pricing}</p>
                   <p>Rating: {lab.rating}</p>
                   {lab.googleLink && (
                     <a
