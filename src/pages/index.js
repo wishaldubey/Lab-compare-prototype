@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { FaSliders} from "react-icons/fa6";
+import { FaSliders,FaArrowLeft } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 
 
@@ -53,7 +53,7 @@ const SearchCities = ({ onSelectCity }) => {
           onKeyDown={handleKeyDown}
           className="border p-2 rounded-full w-full text-black pl-3 pr-10"
         />
-        <FaSearch className="absolute top-1/2 transform -translate-y-1/2 right-3 h-5 w-5 text-blue-500" /> {/* Change color here */}
+        <FaSearch className="absolute top-1/2 transform -translate-y-1/2 right-3 h-5 w-5 text-blue-500" />
       </div>
       {filteredCities.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -80,7 +80,6 @@ const SearchCities = ({ onSelectCity }) => {
     </div>
   );
 };
-
 
 const Home = () => {
   const [selectedCity, setSelectedCity] = useState(null);
@@ -137,9 +136,10 @@ const Home = () => {
           <div className="mb-4 flex items-center justify-between">
             <button
               onClick={() => setSelectedCity(null)}
-              className="bg-blue-500 text-white p-2 rounded"
+              className="flex items-center bg-blue-500 text-white p-2 rounded"
             >
-              Back to Search
+              <FaArrowLeft className="mr-2" /> {/* Back icon */}
+              Back
             </button>
             {labs.length > 0 && (
               <div className="flex items-center">
