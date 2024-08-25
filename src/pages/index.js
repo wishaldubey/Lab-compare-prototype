@@ -76,7 +76,7 @@ const SearchCities = ({ onSelectCity, currentLocation }) => {
           ))}
         </div>
       ) : (
-        <p className="text-white">No cities match your search.</p>
+        <p className="text-white">We are currently unavailable here.</p>
       )}
     </div>
   );
@@ -218,7 +218,7 @@ const Home = () => {
                 </div>
               ))
             ) : noResults ? (
-              <p className="text-white">No laboratories found for this city.</p>
+              <p className="text-white">We are currently unavailable here.</p>
             ) : null}
           </div>
         </div>
