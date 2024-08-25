@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { FaSliders } from "react-icons/fa6";
+import { FaSliders} from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+
 
 
 
@@ -42,14 +44,17 @@ const SearchCities = ({ onSelectCity }) => {
   return (
     <div className="container mx-auto p-5">
       <h1 className="text-2xl font-bold mb-5">Search Labs</h1>
-      <input
-        type="text"
-        placeholder="Search by City Name or Pincode"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={handleKeyDown}
-        className="border p-2 rounded w-full mb-5 text-black"
-      />
+      <div className="relative mb-5">
+        <input
+          type="text"
+          placeholder="Search by City Name or Pincode"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="border p-2 rounded-full w-full text-black pl-3 pr-10"
+        />
+        <FaSearch className="absolute top-1/2 transform -translate-y-1/2 right-3 h-5 w-5 text-blue-500" /> {/* Change color here */}
+      </div>
       {filteredCities.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {filteredCities.map((city) => (
@@ -75,6 +80,7 @@ const SearchCities = ({ onSelectCity }) => {
     </div>
   );
 };
+
 
 const Home = () => {
   const [selectedCity, setSelectedCity] = useState(null);
