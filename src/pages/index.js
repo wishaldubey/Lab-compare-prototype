@@ -3,8 +3,9 @@ import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FaSliders, FaArrowLeft } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
+import axios from "axios";
 
-// City component
+// city component
 const cities = [
   { name: "Mumbai", pincode: "400001", imageUrl: "/mumbai.webp" },
   { name: "Pune", pincode: "411001", imageUrl: "/pune.webp" },
@@ -22,8 +23,8 @@ const cities = [
   { name: "Jaipur", pincode: "302001", imageUrl: "/jaipur.webp" },
 ];
 
-// Search city component
-const SearchCities = ({ onSelectCity, userCity, userPincode }) => {
+// search city component
+const SearchCities = ({ onSelectCity, currentLocation }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCities = cities.filter(
@@ -50,16 +51,11 @@ const SearchCities = ({ onSelectCity, userCity, userPincode }) => {
           onKeyDown={handleKeyDown}
           className="border p-2 rounded-full w-full text-black pl-3 pr-10"
         />
-        <FaSearch className="absolute top-1/2 transform -translate-y-1/2 right-3 h-5 w-5 text-blue-500" />
+<FaSearch className="absolute top-1/2 transform -translate-y-1/2 right-3 h-5 w-5" style={{ color: '#156B86' }} />
       </div>
-      
-      {/* Display current city and pincode */}
-      {userCity && userPincode && (
-        <p className="text-white mb-5">
-          Current City: {userCity.name} (Pincode: {userPincode})
-        </p>
+      {currentLocation && (
+        <p className="text-white mb-4">Current Location: {currentLocation}</p>
       )}
-
       {filteredCities.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {filteredCities.map((city) => (
@@ -86,47 +82,14 @@ const SearchCities = ({ onSelectCity, userCity, userPincode }) => {
   );
 };
 
-// Result component
+// result component
 const Home = () => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [labs, setLabs] = useState([]);
   const [noResults, setNoResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sortOption, setSortOption] = useState("default");
-  const [userCity, setUserCity] = useState(null); // State for user city
-  const [userPincode, setUserPincode] = useState(""); // State for user pincode
-
-  const getUserLocation = async () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        // Use reverse geocoding here to get city name and pincode
-        const apiKey = "bdc_bda8a43075bf48138a6b1ca315d4dedf"; // Your API key
-        const response = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode?latitude=${latitude}&longitude=${longitude}&localityLanguage=en&key=${apiKey}`
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          const city = cities.find((c) => c.name === data.city);
-
-          if (city) {
-            setUserCity(city); // Set user city
-            setUserPincode(city.pincode); // Set user pincode
-          }
-        } else {
-          console.error("Error fetching location data:", response.status, response.statusText);
-        }
-      });
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  };
-
-  useEffect(() => {
-    getUserLocation(); // Call getUserLocation on component mount
-  }, []);
+  const [currentLocation, setCurrentLocation] = useState("");
 
   const handleSelectCity = async (city) => {
     setSelectedCity(city);
@@ -147,7 +110,27 @@ const Home = () => {
     setLoading(false);
   };
 
-  // Filter component
+  useEffect(() => {
+    const fetchLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const response = await axios.get(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en&key=bdc_bda8a43075bf48138a6b1ca315d4dedf`
+            );
+            setCurrentLocation(response.data.locality || response.data.city || "Unknown Location");
+          } catch (error) {
+            console.error("Error fetching location data:", error);
+          }
+        });
+      }
+    };
+
+    fetchLocation();
+  }, []);
+
+  // filter component
   const sortLabs = (labs) => {
     switch (sortOption) {
       case "priceLowToHigh":
@@ -168,11 +151,7 @@ const Home = () => {
   return (
     <div>
       {!selectedCity ? (
-        <SearchCities
-          onSelectCity={handleSelectCity}
-          userCity={userCity}
-          userPincode={userPincode}
-        />
+        <SearchCities onSelectCity={handleSelectCity} currentLocation={currentLocation} />
       ) : (
         <div className="container mx-auto p-5">
           <h1 className="text-2xl font-bold mb-5">
@@ -181,8 +160,9 @@ const Home = () => {
           <div className="mb-4 flex items-center justify-between">
             <button
               onClick={() => setSelectedCity(null)}
-              className="flex items-center bg-blue-500 text-white p-2 rounded"
-            >
+              className="flex items-center text-white p-2 rounded"
+              style={{ backgroundColor: '#156B86' }}
+                          >
               <FaArrowLeft className="mr-2" /> {/* Back icon */}
               Back
             </button>
@@ -204,23 +184,43 @@ const Home = () => {
               </div>
             )}
           </div>
-
-          {loading ? (
-            <p className="text-white">Loading...</p>
-          ) : noResults ? (
-            <p className="text-white">No laboratories found.</p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {sortedLabs.map((lab) => (
-                <div key={lab.id} className="border p-3 rounded-md bg-white">
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {loading ? (
+              <div className="col-span-full">
+                <p className="text-white">Loading data...</p>
+              </div>
+            ) : sortedLabs.length > 0 ? (
+              sortedLabs.map((lab) => (
+                <div
+                  key={lab.id}
+                  className="border p-3 mb-2 flex flex-col items-center"
+                >
+                  {lab.imageUrl && (
+                    <img
+                      src={lab.imageUrl}
+                      alt={lab.name}
+                      className="h-32 w-32 object-cover mb-2"
+                    />
+                  )}
                   <h2 className="font-bold">{lab.name}</h2>
-                  <p>Pincode: {lab.postalCode}</p>
-                  <p>Price: {lab.pricing}</p>
+                  <p>Pricing: ₹{lab.pricing}</p>
                   <p>Rating: {lab.rating}</p>
+                  {lab.googleLink && (
+                    <a
+                      href={lab.googleLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-blue-500 underline"
+                    > 
+                      View on Google 
+                    </a>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
+              ))
+            ) : noResults ? (
+              <p className="text-white">No laboratories found for this city.</p>
+            ) : null}
+          </div>
         </div>
       )}
     </div>
